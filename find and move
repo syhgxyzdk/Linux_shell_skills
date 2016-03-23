@@ -1,0 +1,36 @@
+Finding All .mp3 Files And Move To a New Directory From A Shell Prompt
+
+by VIVEK GITE on JANUARY 7, 2007 last updated JANUARY 22, 2014
+in LINUX, SHELL SCRIPTING, UNIX
+
+Ihave mp3 music files all over my file system. I would like to move them into specific directory called /mnt/mp3. So how do you find and move all mp3 files to /mnt/mp3 directory on Linux or Unix-like system?
+
+Simply use the find command. It locates all files and then executes a command to move each mp3 file to /mnt/mp3 directory.
+Warning: Backup all your data before you type the following commands.
+Step # 1: Finding all your .mp3 files
+
+The following command will just find all your .mp3 files using the find command:
+# find / -iname "*.mp3" -print
+Where,
+/ - Search / root directory
+-iname - File name search pattern (case insensitive)
+-print - Display name of files on screen
+Step # 2: Finding and moving all your .mp3 files in one single pass
+
+Type the following command to find and move all files using mv command to /mnt/mp3 directory:
+# find / -iname "*.mp3" -exec mv {} /mnt/mp3 \;
+Where,
+-exec mv {} /mnt/mp3 \; : Execute mv command. The string '{}' is replaced by the file name. \; ends /bin/mv command.
+To just move .mp3 files and not directories, use:
+# find / -iname "*.mp3" -type f -exec /bin/mv {} /mnt/mp3 \;
+Find all directories having name mp3 and move:
+# find / -iname "*.mp3" -type d -exec /bin/mv {} /mnt/mp3 \;
+For performance you may need to consider using xargs command:
+find / -iname "*.mp3" -type f | xargs -I '{}' mv {} /mnt/mp3
+Sp to moves all .mp3 files with special characters in its name such as white spaces try:
+find / -iname "*.mp3" -type f -print0 | xargs -0 -I '{}' /bin/mv "{}" /mnt/mp3/
+Final solution
+
+Above commands will not maintain sub-directory structure. Try replacing mv with rsync to use the same directory structure on the target directory with the -R option:
+find / -iname "*.mp3" -type f -print0 | xargs -0 -I '{}' /usr/bin/rsync -avR "{}" /mnt/mp3/
+You can also write a script that moves files along with directories. This is also useful tomove all files to mp3 player that has been mounted on /mnt/mp3 directory.

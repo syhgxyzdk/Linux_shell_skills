@@ -1,0 +1,13 @@
+在Linux系统中查询系统CPU和内存的负载（使用率）时，我们通常习惯于使用top、atop或者ps，这篇文章将要给大家介绍如何使用w命令和uptime命令来查看系统的负载情况，对于uptime命令，相信大家比较熟悉了，它主要是用来查询系统最近一次启动后运行了多长时间，而w命令则相对就冷门一些了，下面就详细介绍如何使用这两个命令：
+1. w命令
+
+[root@linuxidc ~]# w14:44:27 up 62 days, 3 min, 2 users, load average: 0.00, 0.01, 0.00
+USER TTY FROM LOGIN@ IDLE JCPU PCPU WHAT
+root pts/0218.18.74.19613:381:01m 0.00s 0.00s -bash
+root pts/1218.18.74.19614:430.00s 0.00s 0.00s w
+　　与who不同的是，使用man w查询的Linux对该命令的介绍是“Show who is logged on and what they are doing.”，w命令可查询登录当前系统的用户信息，以及这些用户目前正在做什么操作，这些信息对于Linux系统管理员来说都是价值的，另外其中的load average后面的三个数字则显示了系统最近1分钟、5分钟、15分钟的系统平均负载情况。
+　　2. uptime命令
+
+[root@linuxidc ~]# uptime14:51:15 up 62 days, 10 min, 2 users, load average: 0.02, 0.01, 0.00
+　　uptime命令回显中的load average所表示的意思和w命令相似，都是表示过去的1分钟、5分钟和15分钟内进程队列中的平均进程数量。
+　　这里需要注意的是load average这个输出值，这三个值的大小一般不能大于系统逻辑CPU的个数，例如，本输出中系统有4个逻辑CPU，如果load average的三个值长期大于4时，说明CPU很繁忙，负载很高，可能会影响系统性能，但是偶尔大于4时，倒不用担心，一般不会影响系统性能。相反，如果load average的输出值小于CPU的个数，则表示CPU还有空闲，比如本例中的输出，CPU是比较空闲的。

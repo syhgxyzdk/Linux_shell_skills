@@ -1,0 +1,73 @@
+<点> <空格> ./shell_script.sh
+
+1.  ./shell_script.sh
+点斜杠执行脚本是启动了另一个Shell去执行脚本（另一个进程），所以点斜杠执行脚本时，设置的环境变量会随着进程的退出而结束，其中的环境变量设置对当前Shell不起作用。
+
+2. <点> <空格> ./shell_script.sh
+点空格点斜杠执行脚本，是相当于source ./执行脚本，source是执行脚本当中的命令，也就是说在当前进程中执行命令，所以其中的环境变量的设置会对当前Shell其作用。
+
+​例如： 如下test.sh脚本
+​#!/bin/bash
+export Hello="Hello World"
+    ​(1)  执行命令：
+    ​    ​    ​$ ./test.sh 
+    ​    ​    ​$ echo $Hello
+    ​    ​  执行结果:  (空)
+    ​    ​  所以设置此环境变量，没有对当前Shell起作用。
+    ​(2)  执行命令:
+    ​    ​    ​$ . ./test.sh
+    ​    ​    ​$ echo $Hello
+    ​    ​    ​执行结果： Hello World
+    ​    ​    对当前Shell​环境变量生效。
+
+以下是man bash中的一段话：
+source filename [arguments]
+    Read and execute commands from filename in the current shell environment
+    and return the exit status of the last command executed from filename.
+    If filename does not contain a slash, file names in PATH are used to find
+    the directory containing filename. The file searched for in PATH need not
+    be executable. When bash is not in posix mode, the current directory is
+    searched if no file is found in PATH. If the sourcepath option to the shopt
+    builtin command is turned off, the PATH is not searched. If any arguments
+    are supplied, they become the positional parameters when filename is
+    executed. Otherwise the positional parameters are unchanged. The return
+    status is the status of the last command exited within the script (0 if
+    no commands are executed), and false if filename is not found or cannot
+    be read.
+
+在前面一面文章中， 我们深入分析过source命令的用途， 现在， 我们要来说说shell中的点命令。 
+ linux shell中的点命令完全等同于source命令。
+如果需要知道source命令的用途， 请直接看我的前一篇文章。 好， 我们来看看点命令操作和结果：
+
+    1. [taoge@localhost Desktop]$ cat a.sh   
+    2. #! /bin/bash  
+    3. echo "shell script"  
+    4. export z="f(x) + f(y)"  
+
+    5. [taoge@localhost Desktop]$ ./a.sh   
+    6. shell script  
+    7. [taoge@localhost Desktop]$ echo $z  
+    8.
+
+    9. [taoge@localhost Desktop]$ . ./a.sh   
+    10. shell script  
+    11. [taoge@localhost Desktop]$ echo $z  
+    12. f(x) + f(y)  
+    13. [taoge@localhost Desktop]$   
+我们看到 点命令的作用， 确实就等价于source命令。
+请注意看". ./a.sh", 前面一个点是点命令， 等价于source, 后面一个点是和/一起的，
+ ./表示当前目录， 而且， 千万要注意， 这两个点之间必须有空格。
+
+那一年， 我经常用到点命令， 用得不亦乐乎， 但不知道是个什么意思.
+后来，某次， 把前面的一个点弄丢了， 造成了重大错误， 排查了较长时间.
+鉴于点命令容易出错， 所以， 我个人建议， 应该用source命令取代点命令.
+实际上， 很多人就是这么做的。
+
+鉴于点命令容易出错， 所以， 我单独写一篇文章， 记录一下.
+好吧， 今天就先到此为止。
+
+
+
+
+
+

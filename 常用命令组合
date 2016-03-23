@@ -1,0 +1,79 @@
+1. 列出当前目录里最大的10个文件
+du -s * | sort -n | tail
+
+2. 以文件大小倒排序, 参数大S用于指定排序
+ls -lhS
+
+3. 根据指定的关键字查询日志(关键字需用双引号括起来，并注意不要出现'<''-'等特殊字符)
+less -p "keyword" logfile
+
+也可以直接使用 less logfile，然后再键入"/keyword"来按照关键字查询日志
+当通过keyword找到日志后，就可以使用向上or向下箭头来查看前后的日志，
+退出日志查看时直接按下Q(大小写均可)键即可
+相比vim, less优点是读一行解析一行，而不是一次都载入内存，效率高些.
+
+4. 统计keyword在日志中的出现次数
+grep -c "keyword" filename
+
+5. 当机器在内网时，可以通过curl命令查看其外网的IP
+curl  ifconfig.me
+
+6. history输出最为常用的十条命令，由此甚至可以洞察你是一个什么类型的程序员
+另外，可以直接使用[history]查看以往执行过的命令，然后使用[!number]执行指定编号的历史命令
+
+history | awk '{CMD[$2]++;count++;} END {for(a in CMD)print CMD[a]" "CMD[a]/count*100 "% " a}' | grep -v "./" | column -c3 -s " " -t | sort -nr|nl|head -n10
+1  47  20.0855%   cd
+2  38  16.2393%   ll
+3  18  7.69231%   pwd
+4  12  5.12821%   vi
+5  12  5.12821%   exit
+6  12  5.12821%   ab
+7  8   3.4188%    halt
+8  8   3.4188%    cat
+9  7   2.99145%   su
+10  7   2.99145%   rm
+
+history | awk '{print $2}' | awk 'BEGIN {FS="|"} {print $1}' | sort | uniq -c | sort -rn | head -10
+47 cd
+38 ll
+18 pwd
+12 vi
+12 exit
+12 ab
+8 halt
+8 cat
+7 su
+7 rm
+
+7. 查询指定端口的监听及运行情况
+netstat -tlanop | grep :80
+    4. tcp        0      0 :::8080                     :::*                        LISTEN      5053/java           off (0.00/0/0)  
+    5. tcp        0      0 ::ffff:192.168.8.31:80      :::*                        LISTEN      17608/java          off (0.00/0/0)  
+    6. [Jadyer@Jadyer-RHEL63 CucPayTradePortalLog]$ lsof -i:80  
+    7. COMMAND   PID USER   FD   TYPE   DEVICE SIZE/OFF NODE NAME  
+    8. java    17608 root  163u  IPv6 29073040      0t0  TCP bjgg-kfvm-31:http (LISTEN)  
+    9. [Jadyer@Jadyer-RHEL63 CucPayTradePortalLog]$  
+
+8. 查看指定年份和月份的日历
+cal 11 2012 
+输出:
+    3.      十一月 2012      
+    4. 日 一 二 三 四 五 六  
+    5.              1  2  3  
+    6.  4  5  6  7  8  9 10  
+    7. 11 12 13 14 15 16 17  
+    8. 18 19 20 21 22 23 24  
+    9. 25 26 27 28 29 30  
+
+9 .显示ASCII码表(免去了Google的烦恼)
+man ascii 
+
+输出:
+    3. DESCRIPTION  
+    4.        Oct   Dec   Hex   Char                        Oct   Dec   Hex   Char  
+    5.        ------------------------------------------------------------------------  
+    6.        000   0     00    NUL '\0'                    100   64    40    @  
+    7.        001   1     01    SOH (start of heading)      101   65    41    A  
+    8.        002   2     02    STX (start of text)         102   66    42    B  
+    9.        003   3     03    ETX (end of text)           103   67    43    C  
+........
